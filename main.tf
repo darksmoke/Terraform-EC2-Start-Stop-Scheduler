@@ -9,21 +9,31 @@ locals {
 }
 
 
+resource "aws_lambda_layer_version" "ec2_start_stop_layer" {
+  filename   = data.null_data_source.lambda_zip.outputs["url"]
+  layer_name = "ec2_start_stop_layer"
+
+  source_code_hash = filebase64sha256(data.null_data_source.lambda_zip.outputs["url"])
+}
+
 resource "aws_lambda_function" "ec2_start_stop" {
   function_name = "ec2_start_stop"
+  role          = aws_iam_role.lambda_ec2_start_stop.arn
   handler       = "lambda_handler.lambda_handler"
-  role          = aws_iam_role.lambda_execution_role.arn
   runtime       = "python3.8"
-
-  filename = "lambda.zip"
-
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  timeout       = 10
 
   environment {
     variables = {
-      INSTANCE_TAGS = jsonencode(var.instance_tags)
+      INSTANCE_TAGS  = jsonencode(local.instance_tags)
+      SCHEDULE_START = local.schedule_start
+      SCHEDULE_STOP  = local.schedule_stop
     }
   }
+
+  layers = [
+    aws_lambda_layer_version.ec2_start_stop_layer.arn
+  ]
 }
 
 resource "aws_cloudwatch_event_rule" "start_instances" {
