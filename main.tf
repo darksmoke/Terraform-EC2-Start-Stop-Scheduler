@@ -2,6 +2,13 @@ provider "aws" {
   region = var.region
 }
 
+locals {
+  instance_tags  = var.instance_tags
+  schedule_start = var.schedule_start
+  schedule_stop  = var.schedule_stop
+}
+
+
 resource "aws_lambda_function" "ec2_start_stop" {
   function_name = "ec2_start_stop"
   handler       = "lambda_handler.lambda_handler"
