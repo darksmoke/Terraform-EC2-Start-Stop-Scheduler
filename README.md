@@ -25,8 +25,3 @@ module "ec2_start_stop_scheduler" {
 ## Outputs
 
 - `lambda_function` - The created Lambda function.
-
-## IAM Roles and Policies
-
-IAM roles and policies are defined in the `iam_roles.tf` file. The module creates a Lambda execution role with permissions to start, stop, and describe EC2 instances.
-
