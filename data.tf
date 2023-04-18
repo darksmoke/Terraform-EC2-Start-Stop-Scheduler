@@ -1,5 +1,5 @@
-data "null_data_source" "lambda_zip" {
+data "null_data_source" "lambda_code" {
   inputs = {
-    url = "https://github.com/darksmoke/Terraform-EC2-Start-Stop-Scheduler/raw/main/lambda.zip"
+    url = "https://raw.githubusercontent.com/darksmoke/Terraform-EC2-Start-Stop-Scheduler/main/lambda/lambda_handler.py"
   }
 }

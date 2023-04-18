@@ -9,19 +9,13 @@ locals {
 }
 
 
-resource "aws_lambda_layer_version" "ec2_start_stop_layer" {
-  filename   = data.null_data_source.lambda_zip.outputs["url"]
-  layer_name = "ec2_start_stop_layer"
-
-  source_code_hash = filebase64sha256(data.null_data_source.lambda_zip.outputs["url"])
-}
 
 resource "aws_lambda_function" "ec2_start_stop" {
-  function_name = "ec2_start_stop"
-  role          = aws_iam_role.lambda_ec2_start_stop.arn
-  handler       = "lambda_handler.lambda_handler"
-  runtime       = "python3.8"
-  timeout       = 10
+  function_name    = "ec2_start_stop"
+  role             = aws_iam_role.lambda_ec2_start_stop.arn
+  handler          = "index.lambda_handler"
+  runtime          = "python3.8"
+  timeout          = 10
 
   environment {
     variables = {
@@ -31,10 +25,30 @@ resource "aws_lambda_function" "ec2_start_stop" {
     }
   }
 
-  layers = [
-    aws_lambda_layer_version.ec2_start_stop_layer.arn
-  ]
+  lifecycle {
+    ignore_changes = [
+      filename,
+      last_modified
+    ]
+  }
 }
+
+resource "null_resource" "upload_lambda_code" {
+  triggers = {
+    code_sha256 = filebase64sha256(data.null_data_source.lambda_code.outputs["url"])
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      echo '${data.null_data_source.lambda_code.outputs["url"]}' > index.py
+      aws lambda update-function-code --function-name ${aws_lambda_function.ec2_start_stop.function_name} --zip-file fileb://index.py --publish --region ${var.region}
+      rm index.py
+    EOT
+  }
+}
+
+
+
 
 resource "aws_cloudwatch_event_rule" "start_instances" {
   name                = "start_instances"
