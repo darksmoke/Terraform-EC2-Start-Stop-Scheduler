@@ -17,7 +17,7 @@ resource "aws_lambda_function" "ec2_start_stop" {
 
   filename = "lambda.zip"
 
-  source_code_hash = filebase64sha256("lambda.zip")
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
   environment {
     variables = {
