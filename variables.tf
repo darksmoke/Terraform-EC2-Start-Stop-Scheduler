@@ -1,21 +1,25 @@
 variable "region" {
-  description = "AWS region"
+  description = "The AWS region where resources will be created"
   type        = string
-  default     = "us-west-2"
 }
 
 variable "instance_tags" {
-  description = "Tags for the EC2 instances to be started and stopped"
+  description = "A map of tags to filter instances for starting and stopping"
   type        = map(string)
-  default     = {}
 }
 
 variable "schedule_start" {
-  description = "Cron expression for the start of the EC2 instances"
-  default     = "cron(0 0 * * ? *)"
+  description = "The cron expression for starting instances"
+  type        = string
 }
 
 variable "schedule_stop" {
-  description = "Cron expression for the stopping of the EC2 instances"
-  default     = "cron(0 12 * * ? *)"
+  description = "The cron expression for stopping instances"
+  type        = string
+}
+
+variable "lambda_function_name" {
+  description = "The name of the Lambda function"
+  type        = string
+  default     = "ec2_start_stop_scheduler"
 }
