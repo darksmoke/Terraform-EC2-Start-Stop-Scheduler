@@ -15,8 +15,9 @@ resource "aws_iam_role" "lambda_ec2_start_stop" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "ec2_start_stop_policy" {
-  policy_arn = aws_iam_policy.ec2_start_stop.arn
+
+resource "aws_iam_role_policy_attachment" "lambda_ec2_start_stop" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
   role       = aws_iam_role.lambda_ec2_start_stop.name
 }
 
@@ -39,4 +40,9 @@ resource "aws_iam_policy" "ec2_start_stop" {
       }
     ]
   })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_start_stop_policy" {
+  policy_arn = aws_iam_policy.ec2_start_stop.arn
+  role       = aws_iam_role.lambda_ec2_start_stop.name
 }

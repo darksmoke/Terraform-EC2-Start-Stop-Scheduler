@@ -1,3 +1,10 @@
+variable "lambda_function_name" {
+  description = "The name of the Lambda function"
+  type        = string
+  default     = "ec2_start_stop_scheduler"
+}
+
+
 variable "region" {
   description = "The AWS region where resources will be created"
   type        = string
@@ -16,10 +23,4 @@ variable "schedule_start" {
 variable "schedule_stop" {
   description = "The cron expression for stopping instances"
   type        = string
-}
-
-variable "lambda_function_name" {
-  description = "The name of the Lambda function"
-  type        = string
-  default     = "ec2_start_stop_scheduler"
 }

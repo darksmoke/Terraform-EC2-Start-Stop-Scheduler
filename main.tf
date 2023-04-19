@@ -19,10 +19,14 @@ resource "aws_lambda_function" "ec2_start_stop" {
 
 
 resource "aws_cloudwatch_event_rule" "start_ec2_instances" {
+  name        = "${var.lambda_function_name}__start"
+  description = "Scheduled start event for EC2 instances"
   schedule_expression = var.schedule_start
 }
 
 resource "aws_cloudwatch_event_rule" "stop_ec2_instances" {
+  name        = "${var.lambda_function_name}__stop"
+  description = "Scheduled stop event for EC2 instances"
   schedule_expression = var.schedule_stop
 }
 
@@ -52,4 +56,9 @@ resource "aws_lambda_permission" "stop_ec2_instances" {
   function_name = aws_lambda_function.ec2_start_stop.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.stop_ec2_instances.arn
+}
+
+
+resource "aws_cloudwatch_log_group" "ec2_start_stop_lambda_log_group" {
+  name = "/aws/lambda/${var.lambda_function_name}"
 }

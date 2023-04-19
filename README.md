@@ -21,15 +21,16 @@ module "ec2_start_stop_scheduler" {
   schedule_stop  = "cron(0 18 * * ? *)"
 }
 ```
+2. Times for schedule_start and schedule_stop are in UTC.
 
-2. Customize the following variables:
+3. Customize the following variables:
 
 - `lambda_name`: A unique name for the Lambda function.
 - `instance_tags`: A map of tags used to filter the EC2 instances that will be started and stopped by the Lambda function.
 - `schedule_start`: A cron expression representing the schedule for starting EC2 instances.
 - `schedule_stop`: A cron expression representing the schedule for stopping EC2 instances.
 
-3. Run `terraform init` and `terraform apply` to create the resources.
+4. Run `terraform init` and `terraform apply` to create the resources.
 
 ## Requirements
 
