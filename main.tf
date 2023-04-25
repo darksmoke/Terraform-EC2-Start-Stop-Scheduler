@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 resource "aws_lambda_function" "ec2_start_stop" {
   function_name = var.lambda_function_name
   filename = "${path.module}/lambda_handler.zip"
